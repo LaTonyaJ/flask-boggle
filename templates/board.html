@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block content %}
+<section id="boggle">
+  <h6>Score:<span class="score">0</span></h6>
+  <table class="board">
+    <tbody>
+      {% for row in board %}
+      <tr>
+        {% for cell in row %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <form method="POST" class="add_word">
+    <label name="guess"></label>
+    <input
+      class="word"
+      for="guess"
+      type="text"
+      name="guess_input"
+      placeholder="Your guess"
+    />
+    <button>Submit</button>
+  </form>
+  <p class="display_result"></p>
+</section>
+{% endblock %}
