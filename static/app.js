@@ -1,9 +1,15 @@
 
 class BoggleGame {
 
-    constructor(board){
+    constructor(board, secs=60){
         this.board = $('#boggle');
         this.score = 0;
+        this.secs = secs;
+        this.words = new Set();
+        this.showTimer();
+
+        this.timer = setInterval(this.tick.bind(this), 1000);
+
         $('.add_word', this.board).on('submit', this.checkWord.bind(this));
     }
    
@@ -28,6 +34,7 @@ class BoggleGame {
             this.showMessage(`Added: ${word}`);
             this.score += word.length;
             this.showScore();
+            this.words.add(word);
         }
 
     }
@@ -41,6 +48,36 @@ class BoggleGame {
         //Display Score
         $('.score', this.board).text(this.score);
     }
+
+    showTimer(){
+        //Display game timer
+        $('.timer', this.board).text(this.secs);
+    }
+
+    async tick(){
+        //Timer Countdown
+        this.secs -= 1;
+        this.showTimer();
+
+        if(this.secs === 0){
+            clearInterval(this.timer);
+            //Disable future guesses
+            $('.word').prop('disabled', true);
+            $('button').prop('disabled', true);
+        }
+        await this.gameEnd();
+    }
+
+    async gameEnd(){
+        //Save score to server
+        const resp = await axios.post('/post-score', {score: this.score});
+        if(resp.data.brokeRecord){
+            this.showMessage(`New High Score: ${this.score}`);
+        } 
+        else{
+            this.showMessage(`Final Score: ${this.score}`);
+        }
+    }
 }
 
-const game = new BoggleGame('boggle');
+const game = new BoggleGame('boggle', 60);

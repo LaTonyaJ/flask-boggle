@@ -1,6 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <section id="boggle">
-  <h6>Score:<span class="score">0</span></h6>
+  <h5>Score:<span class="score"> 0 </span></h5>
+  <h6>Seconds Left:<span class="timer"> </span></h6>
   <table class="board">
     <tbody>
       {% for row in board %}
